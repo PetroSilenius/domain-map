@@ -184,17 +184,17 @@ async function lookupRdap(domain: string): Promise<RegistryRecord | null> {
   };
 }
 
-function resolver(): Resolver {
-  const instance = new Resolver({ timeout: DNS_TIMEOUT_MS, tries: 2 });
-  return instance;
-}
+/**
+ * One resolver for the process. A c-ares channel handles concurrent queries
+ * fine, and a world scan would otherwise build hundreds of them.
+ */
+const dns = new Resolver({ timeout: DNS_TIMEOUT_MS, tries: 2 });
 
 function errorCode(error: unknown): string {
   return (error as { code?: string })?.code ?? "UNKNOWN";
 }
 
 async function lookupDns(domain: string): Promise<RegistryRecord> {
-  const dns = resolver();
   try {
     const nameservers = await dns.resolveNs(domain);
     return {
