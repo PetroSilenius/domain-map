@@ -1,0 +1,1247 @@
+{
+  "AD": {
+    "lon": 1.56,
+    "lat": 42.54,
+    "dot": true
+  },
+  "AE": {
+    "lon": 54.31,
+    "lat": 23.9,
+    "dot": false
+  },
+  "AF": {
+    "lon": 66,
+    "lat": 33.84,
+    "dot": false
+  },
+  "AG": {
+    "lon": -61.79,
+    "lat": 17.08,
+    "dot": true
+  },
+  "AI": {
+    "lon": -63.06,
+    "lat": 18.22,
+    "dot": true
+  },
+  "AL": {
+    "lon": 20.05,
+    "lat": 41.14,
+    "dot": false
+  },
+  "AM": {
+    "lon": 44.93,
+    "lat": 40.29,
+    "dot": false
+  },
+  "AO": {
+    "lon": 17.56,
+    "lat": -12.33,
+    "dot": false
+  },
+  "AQ": {
+    "lon": 20.8,
+    "lat": -80.56,
+    "dot": false
+  },
+  "AR": {
+    "lon": -65.16,
+    "lat": -35.18,
+    "dot": false
+  },
+  "AS": {
+    "lon": -170.72,
+    "lat": -14.3,
+    "dot": true
+  },
+  "AT": {
+    "lon": 14.13,
+    "lat": 47.59,
+    "dot": false
+  },
+  "AU": {
+    "lon": 134.36,
+    "lat": -25.57,
+    "dot": false
+  },
+  "AW": {
+    "lon": -69.98,
+    "lat": 12.52,
+    "dot": true
+  },
+  "AX": {
+    "lon": 19.94,
+    "lat": 60.23,
+    "dot": true
+  },
+  "AZ": {
+    "lon": 47.66,
+    "lat": 40.34,
+    "dot": false
+  },
+  "BA": {
+    "lon": 17.5,
+    "lat": 44.09,
+    "dot": false
+  },
+  "BB": {
+    "lon": -59.56,
+    "lat": 13.18,
+    "dot": true
+  },
+  "BD": {
+    "lon": 90.22,
+    "lat": 23.9,
+    "dot": false
+  },
+  "BE": {
+    "lon": 4.99,
+    "lat": 50.31,
+    "dot": false
+  },
+  "BF": {
+    "lon": -1.75,
+    "lat": 12.27,
+    "dot": false
+  },
+  "BG": {
+    "lon": 25.22,
+    "lat": 42.77,
+    "dot": false
+  },
+  "BH": {
+    "lon": 50.54,
+    "lat": 26.04,
+    "dot": true
+  },
+  "BI": {
+    "lon": 29.88,
+    "lat": -3.36,
+    "dot": true
+  },
+  "BJ": {
+    "lon": 2.33,
+    "lat": 9.64,
+    "dot": false
+  },
+  "BL": {
+    "lon": -62.84,
+    "lat": 17.9,
+    "dot": true
+  },
+  "BM": {
+    "lon": -64.75,
+    "lat": 32.31,
+    "dot": true
+  },
+  "BN": {
+    "lon": 114.59,
+    "lat": 4.49,
+    "dot": true
+  },
+  "BO": {
+    "lon": -64.69,
+    "lat": -16.71,
+    "dot": false
+  },
+  "BQ": {
+    "lon": -68.27,
+    "lat": 12.18,
+    "dot": true
+  },
+  "BR": {
+    "lon": -53.12,
+    "lat": -10.84,
+    "dot": false
+  },
+  "BS": {
+    "lon": -78.04,
+    "lat": 24.7,
+    "dot": true
+  },
+  "BT": {
+    "lon": 90.4,
+    "lat": 27.41,
+    "dot": false
+  },
+  "BV": {
+    "lon": 3.35,
+    "lat": -54.42,
+    "dot": true
+  },
+  "BW": {
+    "lon": 23.8,
+    "lat": -22.18,
+    "dot": false
+  },
+  "BY": {
+    "lon": 28.03,
+    "lat": 53.53,
+    "dot": false
+  },
+  "BZ": {
+    "lon": -88.72,
+    "lat": 17.19,
+    "dot": true
+  },
+  "CA": {
+    "lon": -102.37,
+    "lat": 57.93,
+    "dot": false
+  },
+  "CC": {
+    "lon": 96.84,
+    "lat": -12.17,
+    "dot": true
+  },
+  "CD": {
+    "lon": 23.64,
+    "lat": -2.88,
+    "dot": false
+  },
+  "CF": {
+    "lon": 20.47,
+    "lat": 6.57,
+    "dot": false
+  },
+  "CG": {
+    "lon": 15.22,
+    "lat": -0.84,
+    "dot": false
+  },
+  "CH": {
+    "lon": 8.21,
+    "lat": 46.8,
+    "dot": false
+  },
+  "CI": {
+    "lon": -5.57,
+    "lat": 7.63,
+    "dot": false
+  },
+  "CK": {
+    "lon": -159.79,
+    "lat": -21.22,
+    "dot": true
+  },
+  "CL": {
+    "lon": -71.31,
+    "lat": -35.75,
+    "dot": false
+  },
+  "CM": {
+    "lon": 12.74,
+    "lat": 5.69,
+    "dot": false
+  },
+  "CN": {
+    "lon": 103.8,
+    "lat": 36.62,
+    "dot": false
+  },
+  "CO": {
+    "lon": -73.08,
+    "lat": 3.91,
+    "dot": false
+  },
+  "CR": {
+    "lon": -84.19,
+    "lat": 9.98,
+    "dot": false
+  },
+  "CU": {
+    "lon": -78.94,
+    "lat": 21.61,
+    "dot": false
+  },
+  "CV": {
+    "lon": -23.64,
+    "lat": 15.08,
+    "dot": true
+  },
+  "CW": {
+    "lon": -68.97,
+    "lat": 12.2,
+    "dot": true
+  },
+  "CX": {
+    "lon": 105.66,
+    "lat": -10.49,
+    "dot": true
+  },
+  "CY": {
+    "lon": 33.01,
+    "lat": 34.92,
+    "dot": true
+  },
+  "CZ": {
+    "lon": 15.31,
+    "lat": 49.73,
+    "dot": false
+  },
+  "DE": {
+    "lon": 10.37,
+    "lat": 51.09,
+    "dot": false
+  },
+  "DJ": {
+    "lon": 42.56,
+    "lat": 11.75,
+    "dot": true
+  },
+  "DK": {
+    "lon": 9.36,
+    "lat": 56.24,
+    "dot": false
+  },
+  "DM": {
+    "lon": -61.36,
+    "lat": 15.44,
+    "dot": true
+  },
+  "DO": {
+    "lon": -70.51,
+    "lat": 18.89,
+    "dot": false
+  },
+  "DZ": {
+    "lon": 2.62,
+    "lat": 28.16,
+    "dot": false
+  },
+  "EC": {
+    "lon": -78.39,
+    "lat": -1.45,
+    "dot": false
+  },
+  "EE": {
+    "lon": 25.83,
+    "lat": 58.69,
+    "dot": false
+  },
+  "EG": {
+    "lon": 29.86,
+    "lat": 26.5,
+    "dot": false
+  },
+  "EH": {
+    "lon": -12.22,
+    "lat": 24.23,
+    "dot": false
+  },
+  "ER": {
+    "lon": 38.84,
+    "lat": 15.36,
+    "dot": false
+  },
+  "ES": {
+    "lon": -3.56,
+    "lat": 40.4,
+    "dot": false
+  },
+  "ET": {
+    "lon": 39.6,
+    "lat": 8.62,
+    "dot": false
+  },
+  "FI": {
+    "lon": 26.28,
+    "lat": 64.5,
+    "dot": false
+  },
+  "FJ": {
+    "lon": 177.97,
+    "lat": -17.82,
+    "dot": true
+  },
+  "FK": {
+    "lon": -58.76,
+    "lat": -51.74,
+    "dot": true
+  },
+  "FM": {
+    "lon": 158.23,
+    "lat": 6.89,
+    "dot": true
+  },
+  "FO": {
+    "lon": -6.88,
+    "lat": 62.17,
+    "dot": true
+  },
+  "FR": {
+    "lon": 2.45,
+    "lat": 46.62,
+    "dot": false
+  },
+  "GA": {
+    "lon": 11.79,
+    "lat": -0.59,
+    "dot": false
+  },
+  "GB": {
+    "lon": -1.46,
+    "lat": 52.6,
+    "dot": false
+  },
+  "GD": {
+    "lon": -61.68,
+    "lat": 12.12,
+    "dot": true
+  },
+  "GE": {
+    "lon": 43.51,
+    "lat": 42.17,
+    "dot": false
+  },
+  "GF": {
+    "lon": -53.25,
+    "lat": 3.93,
+    "dot": false
+  },
+  "GG": {
+    "lon": -2.57,
+    "lat": 49.47,
+    "dot": true
+  },
+  "GH": {
+    "lon": -1.22,
+    "lat": 7.95,
+    "dot": false
+  },
+  "GL": {
+    "lon": -41.36,
+    "lat": 74.72,
+    "dot": false
+  },
+  "GM": {
+    "lon": -15.4,
+    "lat": 13.45,
+    "dot": true
+  },
+  "GN": {
+    "lon": -10.94,
+    "lat": 10.44,
+    "dot": false
+  },
+  "GP": {
+    "lon": -61.67,
+    "lat": 16.17,
+    "dot": true
+  },
+  "GQ": {
+    "lon": 10.47,
+    "lat": 1.57,
+    "dot": true
+  },
+  "GR": {
+    "lon": 22.58,
+    "lat": 39.48,
+    "dot": false
+  },
+  "GS": {
+    "lon": -36.69,
+    "lat": -54.36,
+    "dot": true
+  },
+  "GT": {
+    "lon": -90.36,
+    "lat": 15.69,
+    "dot": false
+  },
+  "GU": {
+    "lon": 144.77,
+    "lat": 13.44,
+    "dot": true
+  },
+  "GW": {
+    "lon": -14.92,
+    "lat": 12.06,
+    "dot": false
+  },
+  "GY": {
+    "lon": -58.98,
+    "lat": 4.79,
+    "dot": false
+  },
+  "HK": {
+    "lon": 114.14,
+    "lat": 22.44,
+    "dot": true
+  },
+  "HM": {
+    "lon": 73.52,
+    "lat": -53.09,
+    "dot": true
+  },
+  "HN": {
+    "lon": -86.62,
+    "lat": 14.82,
+    "dot": false
+  },
+  "HR": {
+    "lon": 16.42,
+    "lat": 45.16,
+    "dot": false
+  },
+  "HT": {
+    "lon": -72.68,
+    "lat": 18.93,
+    "dot": true
+  },
+  "HU": {
+    "lon": 19.4,
+    "lat": 47.16,
+    "dot": false
+  },
+  "ID": {
+    "lon": 114.01,
+    "lat": -0.19,
+    "dot": false
+  },
+  "IE": {
+    "lon": -8.13,
+    "lat": 53.17,
+    "dot": false
+  },
+  "IL": {
+    "lon": 35,
+    "lat": 31.44,
+    "dot": true
+  },
+  "IM": {
+    "lon": -4.54,
+    "lat": 54.22,
+    "dot": true
+  },
+  "IN": {
+    "lon": 79.59,
+    "lat": 22.91,
+    "dot": false
+  },
+  "IO": {
+    "lon": 72.45,
+    "lat": -7.33,
+    "dot": true
+  },
+  "IQ": {
+    "lon": 43.74,
+    "lat": 33.04,
+    "dot": false
+  },
+  "IR": {
+    "lon": 54.27,
+    "lat": 32.58,
+    "dot": false
+  },
+  "IS": {
+    "lon": -18.57,
+    "lat": 65,
+    "dot": false
+  },
+  "IT": {
+    "lon": 12.15,
+    "lat": 43.53,
+    "dot": false
+  },
+  "JE": {
+    "lon": -2.13,
+    "lat": 49.22,
+    "dot": true
+  },
+  "JM": {
+    "lon": -77.31,
+    "lat": 18.16,
+    "dot": true
+  },
+  "JO": {
+    "lon": 36.77,
+    "lat": 31.25,
+    "dot": false
+  },
+  "JP": {
+    "lon": 137.99,
+    "lat": 36.65,
+    "dot": false
+  },
+  "KE": {
+    "lon": 37.8,
+    "lat": 0.6,
+    "dot": false
+  },
+  "KG": {
+    "lon": 74.53,
+    "lat": 41.46,
+    "dot": false
+  },
+  "KH": {
+    "lon": 104.91,
+    "lat": 12.72,
+    "dot": false
+  },
+  "KI": {
+    "lon": -157.37,
+    "lat": 1.85,
+    "dot": true
+  },
+  "KM": {
+    "lon": 43.34,
+    "lat": -11.65,
+    "dot": true
+  },
+  "KN": {
+    "lon": -62.75,
+    "lat": 17.33,
+    "dot": true
+  },
+  "KP": {
+    "lon": 127.19,
+    "lat": 40.15,
+    "dot": false
+  },
+  "KR": {
+    "lon": 127.87,
+    "lat": 36.46,
+    "dot": false
+  },
+  "KW": {
+    "lon": 47.56,
+    "lat": 29.32,
+    "dot": true
+  },
+  "KY": {
+    "lon": -81.29,
+    "lat": 19.32,
+    "dot": true
+  },
+  "KZ": {
+    "lon": 67.29,
+    "lat": 48.16,
+    "dot": false
+  },
+  "LA": {
+    "lon": 103.74,
+    "lat": 18.5,
+    "dot": false
+  },
+  "LB": {
+    "lon": 35.88,
+    "lat": 33.92,
+    "dot": true
+  },
+  "LC": {
+    "lon": -60.97,
+    "lat": 13.89,
+    "dot": true
+  },
+  "LI": {
+    "lon": 9.54,
+    "lat": 47.14,
+    "dot": true
+  },
+  "LK": {
+    "lon": 80.7,
+    "lat": 7.61,
+    "dot": false
+  },
+  "LR": {
+    "lon": -9.32,
+    "lat": 6.45,
+    "dot": false
+  },
+  "LS": {
+    "lon": 28.23,
+    "lat": -29.58,
+    "dot": false
+  },
+  "LT": {
+    "lon": 23.89,
+    "lat": 55.33,
+    "dot": false
+  },
+  "LU": {
+    "lon": 6.07,
+    "lat": 49.77,
+    "dot": true
+  },
+  "LV": {
+    "lon": 24.91,
+    "lat": 56.85,
+    "dot": false
+  },
+  "LY": {
+    "lon": 18.01,
+    "lat": 27.03,
+    "dot": false
+  },
+  "MA": {
+    "lon": -8.46,
+    "lat": 29.84,
+    "dot": false
+  },
+  "MC": {
+    "lon": 7.41,
+    "lat": 43.75,
+    "dot": true
+  },
+  "MD": {
+    "lon": 28.46,
+    "lat": 47.19,
+    "dot": false
+  },
+  "ME": {
+    "lon": 19.24,
+    "lat": 42.79,
+    "dot": true
+  },
+  "MF": {
+    "lon": -63.06,
+    "lat": 18.09,
+    "dot": true
+  },
+  "MG": {
+    "lon": 46.7,
+    "lat": -19.38,
+    "dot": false
+  },
+  "MH": {
+    "lon": 171.19,
+    "lat": 7.11,
+    "dot": true
+  },
+  "MK": {
+    "lon": 21.68,
+    "lat": 41.6,
+    "dot": false
+  },
+  "ML": {
+    "lon": -3.54,
+    "lat": 17.35,
+    "dot": false
+  },
+  "MM": {
+    "lon": 96.49,
+    "lat": 21.22,
+    "dot": false
+  },
+  "MN": {
+    "lon": 103.05,
+    "lat": 46.83,
+    "dot": false
+  },
+  "MO": {
+    "lon": 113.51,
+    "lat": 22.22,
+    "dot": true
+  },
+  "MP": {
+    "lon": 145.74,
+    "lat": 15.18,
+    "dot": true
+  },
+  "MQ": {
+    "lon": -61.02,
+    "lat": 14.66,
+    "dot": true
+  },
+  "MR": {
+    "lon": -10.35,
+    "lat": 20.26,
+    "dot": false
+  },
+  "MS": {
+    "lon": -62.19,
+    "lat": 16.74,
+    "dot": true
+  },
+  "MT": {
+    "lon": 14.44,
+    "lat": 35.89,
+    "dot": true
+  },
+  "MU": {
+    "lon": 57.57,
+    "lat": -20.28,
+    "dot": true
+  },
+  "MV": {
+    "lon": 73.5,
+    "lat": 4.2,
+    "dot": true
+  },
+  "MW": {
+    "lon": 34.29,
+    "lat": -13.22,
+    "dot": false
+  },
+  "MX": {
+    "lon": -102.51,
+    "lat": 23.94,
+    "dot": false
+  },
+  "MY": {
+    "lon": 114.72,
+    "lat": 3.62,
+    "dot": false
+  },
+  "MZ": {
+    "lon": 35.53,
+    "lat": -17.27,
+    "dot": false
+  },
+  "NA": {
+    "lon": 17.21,
+    "lat": -22.13,
+    "dot": false
+  },
+  "NC": {
+    "lon": 165.49,
+    "lat": -21.33,
+    "dot": true
+  },
+  "NE": {
+    "lon": 9.39,
+    "lat": 17.42,
+    "dot": false
+  },
+  "NF": {
+    "lon": 167.95,
+    "lat": -29.05,
+    "dot": true
+  },
+  "NG": {
+    "lon": 8.09,
+    "lat": 9.6,
+    "dot": false
+  },
+  "NI": {
+    "lon": -85.03,
+    "lat": 12.85,
+    "dot": false
+  },
+  "NL": {
+    "lon": 5.64,
+    "lat": 52.28,
+    "dot": false
+  },
+  "NO": {
+    "lon": 13.91,
+    "lat": 64.24,
+    "dot": false
+  },
+  "NP": {
+    "lon": 83.92,
+    "lat": 28.25,
+    "dot": false
+  },
+  "NR": {
+    "lon": 166.93,
+    "lat": -0.52,
+    "dot": true
+  },
+  "NU": {
+    "lon": -169.87,
+    "lat": -19.05,
+    "dot": true
+  },
+  "NZ": {
+    "lon": 170.53,
+    "lat": -43.97,
+    "dot": false
+  },
+  "OM": {
+    "lon": 56.09,
+    "lat": 20.58,
+    "dot": false
+  },
+  "PA": {
+    "lon": -80.11,
+    "lat": 8.52,
+    "dot": false
+  },
+  "PE": {
+    "lon": -74.38,
+    "lat": -9.15,
+    "dot": false
+  },
+  "PF": {
+    "lon": -149.42,
+    "lat": -17.66,
+    "dot": true
+  },
+  "PG": {
+    "lon": 144.24,
+    "lat": -6.61,
+    "dot": false
+  },
+  "PH": {
+    "lon": 121.42,
+    "lat": 15.96,
+    "dot": false
+  },
+  "PK": {
+    "lon": 69.34,
+    "lat": 29.95,
+    "dot": false
+  },
+  "PL": {
+    "lon": 19.39,
+    "lat": 52.13,
+    "dot": false
+  },
+  "PM": {
+    "lon": -56.33,
+    "lat": 46.95,
+    "dot": true
+  },
+  "PN": {
+    "lon": -128.32,
+    "lat": -24.37,
+    "dot": true
+  },
+  "PR": {
+    "lon": -66.48,
+    "lat": 18.23,
+    "dot": true
+  },
+  "PS": {
+    "lon": 35.25,
+    "lat": 31.95,
+    "dot": true
+  },
+  "PT": {
+    "lon": -7.98,
+    "lat": 39.68,
+    "dot": false
+  },
+  "PW": {
+    "lon": 134.58,
+    "lat": 7.51,
+    "dot": true
+  },
+  "PY": {
+    "lon": -58.4,
+    "lat": -23.23,
+    "dot": false
+  },
+  "QA": {
+    "lon": 51.18,
+    "lat": 25.31,
+    "dot": true
+  },
+  "RE": {
+    "lon": 55.54,
+    "lat": -21.12,
+    "dot": true
+  },
+  "RO": {
+    "lon": 24.97,
+    "lat": 45.85,
+    "dot": false
+  },
+  "RS": {
+    "lon": 21.07,
+    "lat": 43.77,
+    "dot": false
+  },
+  "RU": {
+    "lon": 99.06,
+    "lat": 61.66,
+    "dot": false
+  },
+  "RW": {
+    "lon": 29.92,
+    "lat": -1.99,
+    "dot": true
+  },
+  "SA": {
+    "lon": 44.54,
+    "lat": 24.12,
+    "dot": false
+  },
+  "SB": {
+    "lon": 160.17,
+    "lat": -9.62,
+    "dot": true
+  },
+  "SC": {
+    "lon": 55.48,
+    "lat": -4.66,
+    "dot": true
+  },
+  "SD": {
+    "lon": 29.94,
+    "lat": 15.99,
+    "dot": false
+  },
+  "SE": {
+    "lon": 16.73,
+    "lat": 62.83,
+    "dot": false
+  },
+  "SG": {
+    "lon": 103.82,
+    "lat": 1.36,
+    "dot": true
+  },
+  "SH": {
+    "lon": -5.72,
+    "lat": -15.96,
+    "dot": true
+  },
+  "SI": {
+    "lon": 14.8,
+    "lat": 46.12,
+    "dot": true
+  },
+  "SJ": {
+    "lon": 15.88,
+    "lat": 78.6,
+    "dot": false
+  },
+  "SK": {
+    "lon": 19.48,
+    "lat": 48.71,
+    "dot": false
+  },
+  "SL": {
+    "lon": -11.79,
+    "lat": 8.57,
+    "dot": false
+  },
+  "SM": {
+    "lon": 12.46,
+    "lat": 43.94,
+    "dot": true
+  },
+  "SN": {
+    "lon": -14.47,
+    "lat": 14.37,
+    "dot": false
+  },
+  "SO": {
+    "lon": 45.71,
+    "lat": 4.75,
+    "dot": false
+  },
+  "SR": {
+    "lon": -55.91,
+    "lat": 4.13,
+    "dot": false
+  },
+  "SS": {
+    "lon": 30.25,
+    "lat": 7.31,
+    "dot": false
+  },
+  "ST": {
+    "lon": 6.61,
+    "lat": 0.24,
+    "dot": true
+  },
+  "SV": {
+    "lon": -88.87,
+    "lat": 13.74,
+    "dot": true
+  },
+  "SX": {
+    "lon": -63.06,
+    "lat": 18.05,
+    "dot": true
+  },
+  "SY": {
+    "lon": 38.5,
+    "lat": 35.02,
+    "dot": false
+  },
+  "SZ": {
+    "lon": 31.48,
+    "lat": -26.56,
+    "dot": true
+  },
+  "TC": {
+    "lon": -71.74,
+    "lat": 21.81,
+    "dot": true
+  },
+  "TD": {
+    "lon": 18.64,
+    "lat": 15.33,
+    "dot": false
+  },
+  "TF": {
+    "lon": 69.5,
+    "lat": -49.3,
+    "dot": true
+  },
+  "TG": {
+    "lon": 0.96,
+    "lat": 8.53,
+    "dot": false
+  },
+  "TH": {
+    "lon": 101.01,
+    "lat": 15.13,
+    "dot": false
+  },
+  "TJ": {
+    "lon": 71.01,
+    "lat": 38.53,
+    "dot": false
+  },
+  "TK": {
+    "lon": -172.49,
+    "lat": -8.57,
+    "dot": true
+  },
+  "TL": {
+    "lon": 125.92,
+    "lat": -8.81,
+    "dot": true
+  },
+  "TM": {
+    "lon": 59.37,
+    "lat": 39.12,
+    "dot": false
+  },
+  "TN": {
+    "lon": 9.55,
+    "lat": 34.12,
+    "dot": false
+  },
+  "TO": {
+    "lon": -175.22,
+    "lat": -21.17,
+    "dot": true
+  },
+  "TR": {
+    "lon": 35.42,
+    "lat": 38.99,
+    "dot": false
+  },
+  "TT": {
+    "lon": -61.29,
+    "lat": 10.42,
+    "dot": true
+  },
+  "TV": {
+    "lon": 179.21,
+    "lat": -8.5,
+    "dot": true
+  },
+  "TW": {
+    "lon": 120.96,
+    "lat": 23.75,
+    "dot": false
+  },
+  "TZ": {
+    "lon": 34.8,
+    "lat": -6.28,
+    "dot": false
+  },
+  "UA": {
+    "lon": 31.25,
+    "lat": 49.16,
+    "dot": false
+  },
+  "UG": {
+    "lon": 32.37,
+    "lat": 1.27,
+    "dot": false
+  },
+  "UM": {
+    "lon": 166.63,
+    "lat": 19.28,
+    "dot": true
+  },
+  "US": {
+    "lon": -99.14,
+    "lat": 39.53,
+    "dot": false
+  },
+  "UY": {
+    "lon": -56.02,
+    "lat": -32.8,
+    "dot": false
+  },
+  "UZ": {
+    "lon": 63.13,
+    "lat": 41.76,
+    "dot": false
+  },
+  "VA": {
+    "lon": 12.43,
+    "lat": 41.9,
+    "dot": true
+  },
+  "VC": {
+    "lon": -61.2,
+    "lat": 13.25,
+    "dot": true
+  },
+  "VE": {
+    "lon": -66.19,
+    "lat": 7.12,
+    "dot": false
+  },
+  "VG": {
+    "lon": -64.62,
+    "lat": 18.42,
+    "dot": true
+  },
+  "VI": {
+    "lon": -64.77,
+    "lat": 17.74,
+    "dot": true
+  },
+  "VN": {
+    "lon": 106.3,
+    "lat": 16.65,
+    "dot": false
+  },
+  "VU": {
+    "lon": 166.85,
+    "lat": -15.23,
+    "dot": true
+  },
+  "WF": {
+    "lon": -178.13,
+    "lat": -14.29,
+    "dot": true
+  },
+  "WS": {
+    "lon": -172.44,
+    "lat": -13.63,
+    "dot": true
+  },
+  "XK": {
+    "lon": 20.87,
+    "lat": 42.57,
+    "dot": true
+  },
+  "YE": {
+    "lon": 47.54,
+    "lat": 15.94,
+    "dot": false
+  },
+  "YT": {
+    "lon": 45.13,
+    "lat": -12.82,
+    "dot": true
+  },
+  "ZA": {
+    "lon": 25.16,
+    "lat": -29.01,
+    "dot": false
+  },
+  "ZM": {
+    "lon": 27.77,
+    "lat": -13.46,
+    "dot": false
+  },
+  "ZW": {
+    "lon": 29.85,
+    "lat": -19,
+    "dot": false
+  }
+}
