@@ -40,18 +40,22 @@ export function ProjectForm({
   // arrives from a link or from storage, which is cheaper and less surprising
   // than mirroring props into state on every change.
   const [domainsText, setDomainsText] = useState(project.owned.join(", "));
-  const [brand, setBrand] = useState(project.brand);
-  const [brandEdited, setBrandEdited] = useState(false);
+  /**
+   * `null` means the field has never been touched, so it follows the first
+   * domain. Anything else is what the person typed and is shown verbatim —
+   * including an empty string, so the field can actually be cleared.
+   */
+  const [typedBrand, setTypedBrand] = useState<string | null>(project.brand || null);
 
   const domains = parseDomainList(domainsText);
   const derivedBrand = domains[0] ? brandFromDomain(domains[0]) : "";
-  const effectiveBrand = brandEdited && brand ? brand : derivedBrand || brand;
-  const ready = isValidBrand(effectiveBrand);
+  const brand = typedBrand ?? derivedBrand;
+  const ready = isValidBrand(brand);
 
   function submit(event: React.FormEvent) {
     event.preventDefault();
     if (!ready) return;
-    onSubmit({ brand: effectiveBrand, owned: domains, overrides: project.overrides });
+    onSubmit({ brand, owned: domains, overrides: project.overrides });
   }
 
   return (
@@ -78,23 +82,20 @@ export function ProjectForm({
         <div className="flex items-center gap-2">
           <Input
             id="brand"
-            value={effectiveBrand}
-            onChange={(event) => {
-              setBrandEdited(true);
-              setBrand(event.target.value.trim().toLowerCase());
-            }}
-            placeholder="dataatti"
+            value={brand}
+            onChange={(event) => setTypedBrand(event.target.value.toLowerCase())}
+            placeholder={derivedBrand || "dataatti"}
             autoComplete="off"
             spellCheck={false}
             className="font-mono"
           />
-          {effectiveBrand ? (
+          {brand ? (
             <span className="text-muted-foreground shrink-0 font-mono text-sm">
               .fi .se .de …
             </span>
           ) : null}
         </div>
-        {effectiveBrand && !ready ? (
+        {brand && !ready ? (
           <p className="text-destructive text-xs">
             A brand can only contain letters, digits, and hyphens.
           </p>

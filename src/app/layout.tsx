@@ -1,17 +1,22 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Instrument_Sans, JetBrains_Mono } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
+import { statusColorStyles } from "@/lib/domain-status";
 import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const sans = Instrument_Sans({
+  variable: "--font-instrument-sans",
   subsets: ["latin"],
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+// Domain names are the thing people read most closely on this page, so they get
+// a mono with unambiguous zeroes and a clear l/1/I.
+const mono = JetBrains_Mono({
+  variable: "--font-jetbrains-mono",
   subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -27,8 +32,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       // next-themes writes the theme class on the client before paint, which
       // the server render cannot match.
       suppressHydrationWarning
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${sans.variable} ${mono.variable} h-full antialiased`}
     >
+      <head>
+        {/* Inline so the status palette is present before first paint. */}
+        <style>{statusColorStyles()}</style>
+      </head>
       <body className="flex min-h-full flex-col">
         <ThemeProvider>
           {children}

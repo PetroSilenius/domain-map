@@ -82,7 +82,14 @@ npm run build:geo  # regenerate the map geometry (see below)
 - **Next.js 16** (App Router) with **Tailwind CSS 4** and **shadcn/ui**.
 - **[mapcn](https://github.com/AnmolSaini16/mapcn)** for the map, in globe
   projection over a tile-less basemap. Countries are one GeoJSON fill layer
-  coloured by a MapLibre `match` expression.
+  coloured by a MapLibre `match` expression, and a second `match` on
+  `fill-opacity` carries the legend filter onto the globe — picking "Free" dims
+  everything that is not free rather than only shortening the list.
+- The status palette is defined once, in `src/lib/domain-status.ts`. MapLibre
+  paints outside the CSS cascade, so the same values are also emitted as custom
+  properties into the document head and read back by the swatches in the DOM.
+  Country fills sit at 85% opacity over the globe's grey, which keeps six
+  colours reading as one set.
 - `POST /api/lookup` runs RDAP and DNS lookups server-side (DNS needs the Node
   runtime, and RDAP endpoints do not send CORS headers). It reports registry
   facts only; deciding what is *yours* happens on the client, which keeps the

@@ -19,7 +19,13 @@ import {
   type MapRef,
 } from "@/components/ui/map";
 import { COUNTRIES, flagFor } from "@/lib/countries";
-import { STATUS_META, type DomainStatus } from "@/lib/domain-status";
+import {
+  FILL_OPACITY,
+  FILL_OPACITY_DIMMED,
+  FILL_OPACITY_HOVER,
+  STATUS_META,
+  type DomainStatus,
+} from "@/lib/domain-status";
 import { StatusDot } from "@/components/status-badge";
 import { GLOBE_STYLES, OUTLINE } from "@/lib/globe-style";
 import type { CountryResult } from "@/lib/use-scan";
@@ -65,6 +71,35 @@ function colorExpression(
 }
 
 /**
+ * Builds the `fill-opacity` expression that carries the legend filter onto the
+ * map: countries matching a selected status stay solid, everything else fades
+ * back into the ocean. Without this the filter only narrowed the list, which is
+ * the half of the answer you can already read.
+ */
+function opacityExpression(
+  results: Map<string, CountryResult>,
+  statusFilter: Set<DomainStatus>,
+): DataDrivenPropertyValueSpecification<number> {
+  if (statusFilter.size === 0) return FILL_OPACITY;
+
+  const highlighted: string[] = [];
+  for (const [iso, result] of results) {
+    if (statusFilter.has(result.status)) highlighted.push(iso);
+  }
+  // `match` needs at least one branch, and a filter that selects nothing should
+  // dim the whole globe rather than throw.
+  if (highlighted.length === 0) return FILL_OPACITY_DIMMED;
+
+  return [
+    "match",
+    ["get", "iso"],
+    highlighted,
+    FILL_OPACITY,
+    FILL_OPACITY_DIMMED,
+  ] as unknown as ExpressionSpecification;
+}
+
+/**
  * Dots for the countries that cannot be seen or clicked as polygons.
  *
  * About 100 of the world's ccTLDs belong to islands and microstates that are
@@ -75,10 +110,12 @@ function colorExpression(
  */
 function CountryDots({
   results,
+  statusFilter,
   onSelect,
   onHover,
 }: {
   results: Map<string, CountryResult>;
+  statusFilter: Set<DomainStatus>;
   onSelect: (iso: string) => void;
   onHover: (iso: string | null) => void;
 }) {
@@ -124,7 +161,6 @@ function CountryDots({
         // Small enough not to crowd the globe, large enough to hit.
         "circle-radius": ["interpolate", ["linear"], ["zoom"], 1, 2.5, 4, 5, 8, 9],
         "circle-stroke-width": 1,
-        "circle-opacity": 0.95,
       },
     });
 
@@ -161,15 +197,21 @@ function CountryDots({
 
   useEffect(() => {
     if (!isLoaded || !map || !map.getLayer(LAYER)) return;
+    const opacity = opacityExpression(results, statusFilter);
     map.setPaintProperty(LAYER, "circle-color", colorExpression(results, resolvedTheme));
     map.setPaintProperty(LAYER, "circle-stroke-color", OUTLINE[resolvedTheme].line);
-  }, [isLoaded, map, results, resolvedTheme]);
+    // Dots fade with the polygons so a filtered globe reads as one picture.
+    map.setPaintProperty(LAYER, "circle-opacity", opacity);
+    map.setPaintProperty(LAYER, "circle-stroke-opacity", opacity);
+  }, [isLoaded, map, results, statusFilter, resolvedTheme]);
 
   return null;
 }
 
 export type DomainGlobeProps = {
   results: Map<string, CountryResult>;
+  /** Statuses selected in the legend. Empty means no filter. */
+  statusFilter: Set<DomainStatus>;
   selectedIso: string | null;
   onSelect: (iso: string | null) => void;
   /** Set when the globe should rotate to a country, e.g. after a list click. */
@@ -178,6 +220,7 @@ export type DomainGlobeProps = {
 
 export function DomainGlobe({
   results,
+  statusFilter,
   selectedIso,
   onSelect,
   focusIso,
@@ -212,16 +255,16 @@ export function DomainGlobe({
   const fillPaint = useMemo(
     () => ({
       "fill-color": colorExpression(results, "light"),
-      "fill-opacity": 1,
+      "fill-opacity": opacityExpression(results, statusFilter),
     }),
-    [results],
+    [results, statusFilter],
   );
   const darkFillPaint = useMemo(
     () => ({
       "fill-color": colorExpression(results, "dark"),
-      "fill-opacity": 1,
+      "fill-opacity": opacityExpression(results, statusFilter),
     }),
-    [results],
+    [results, statusFilter],
   );
 
   return (
@@ -233,7 +276,8 @@ export function DomainGlobe({
         projection={{ type: "globe" }}
         center={[10, 25]}
         zoom={1.75}
-        minZoom={0.5}
+        // Stops the globe shrinking into a marble surrounded by empty page.
+        minZoom={1.3}
         maxZoom={9}
         className="size-full"
       >
@@ -246,6 +290,7 @@ export function DomainGlobe({
         />
         <CountryDots
           results={results}
+          statusFilter={statusFilter}
           onSelect={onSelect}
           onHover={setHoveredIso}
         />
@@ -324,7 +369,7 @@ function GlobeLayers({
       interactive
       fillPaint={resolvedTheme === "dark" ? darkPaint : lightPaint}
       linePaint={linePaint}
-      fillHoverPaint={{ "fill-opacity": 0.7 }}
+      fillHoverPaint={{ "fill-opacity": FILL_OPACITY_HOVER }}
       onClick={onCountryClick}
       onHover={(event) => onCountryHover(event?.feature.properties.iso ?? null)}
     />

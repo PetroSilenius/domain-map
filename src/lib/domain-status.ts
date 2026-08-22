@@ -74,63 +74,82 @@ export type StatusMeta = {
   label: string;
   /** Shown in the legend, under the label. */
   blurb: string;
-  /** Fill colour for the map. Hex, because MapLibre paints outside the CSS cascade. */
+  /**
+   * The one place a status colour is defined. MapLibre paints outside the CSS
+   * cascade, so these have to be literals rather than theme tokens — and the
+   * DOM reads the same values back through the custom properties emitted by
+   * `statusColorStyles()`, so the swatches can never drift from the map.
+   */
   color: { light: string; dark: string };
-  /** Tailwind classes for the matching badge/swatch in the DOM. */
-  swatch: string;
 };
 
 /**
- * Map colours are hex literals rather than theme tokens because MapLibre paint
- * properties are resolved by WebGL, not CSS. The light and dark values are
- * tuned to stay distinguishable against the ocean fill in `globe-style.ts`.
+ * Country fills sit slightly transparent over the globe's grey, which knocks
+ * the saturation back and lets the statuses read as a set rather than as six
+ * unrelated colours.
  */
+export const FILL_OPACITY = 0.85;
+/** Countries filtered out of the legend selection, faded into the ocean. */
+export const FILL_OPACITY_DIMMED = 0.14;
+/** The country under the cursor comes forward to full strength. */
+export const FILL_OPACITY_HOVER = 1;
+
 export const STATUS_META: Record<DomainStatus, StatusMeta> = {
   owned: {
     label: "Yours",
     blurb: "Registered to you",
-    color: { light: "#059669", dark: "#10b981" },
-    swatch: "bg-emerald-600 dark:bg-emerald-500",
+    color: { light: "#12795b", dark: "#2f9e78" },
   },
   taken: {
     label: "Taken",
     blurb: "Registered by someone else",
-    color: { light: "#dc2626", dark: "#f87171" },
-    swatch: "bg-red-600 dark:bg-red-400",
+    color: { light: "#a33a33", dark: "#c4544c" },
   },
   available: {
     label: "Free",
     blurb: "Unregistered, open to anyone",
-    color: { light: "#0284c7", dark: "#38bdf8" },
-    swatch: "bg-sky-600 dark:bg-sky-400",
+    color: { light: "#22649f", dark: "#4a86c9" },
   },
   restricted: {
     label: "Restricted",
     blurb: "Unregistered, but needs local presence",
-    color: { light: "#d97706", dark: "#fbbf24" },
-    swatch: "bg-amber-600 dark:bg-amber-400",
+    color: { light: "#96661c", dark: "#c08a3e" },
   },
   closed: {
     label: "No registry",
     blurb: "Not sold to the public",
-    color: { light: "#a1a1aa", dark: "#52525b" },
-    swatch: "bg-zinc-400 dark:bg-zinc-600",
+    color: { light: "#a9a9b2", dark: "#43434b" },
   },
   unknown: {
     label: "Unknown",
     blurb: "Registry did not answer",
-    color: { light: "#c084fc", dark: "#a855f7" },
-    swatch: "bg-purple-400 dark:bg-purple-500",
+    color: { light: "#5f4aa3", dark: "#7f6ac0" },
   },
   pending: {
     label: "Not checked",
     blurb: "Not looked up yet",
-    color: { light: "#e4e4e7", dark: "#3f3f46" },
-    swatch: "bg-zinc-200 dark:bg-zinc-700",
+    // Land with no answer yet: a step in from the ocean, so the continents are
+    // visible before the first scan finishes.
+    color: { light: "#cbcbd1", dark: "#2c2c32" },
   },
 };
 
-/** Legend order, and the order the summary counts read in. */
+const ALL_STATUSES = Object.keys(STATUS_META) as DomainStatus[];
+
+/**
+ * Emits the palette as custom properties so CSS and MapLibre share one source.
+ * Rendered inline in the document head, ahead of first paint.
+ */
+export function statusColorStyles(): string {
+  const declare = (theme: "light" | "dark") =>
+    ALL_STATUSES.map((status) => `--status-${status}:${STATUS_META[status].color[theme]}`).join(";");
+  return `:root{${declare("light")}}.dark{${declare("dark")}}`;
+}
+
+/**
+ * Legend order. `pending` is deliberately absent: "not checked" is a state the
+ * map passes through, not one worth a row or a filter of its own.
+ */
 export const STATUS_ORDER: DomainStatus[] = [
   "owned",
   "available",
@@ -138,7 +157,6 @@ export const STATUS_ORDER: DomainStatus[] = [
   "taken",
   "closed",
   "unknown",
-  "pending",
 ];
 
 /** A result for a country that was never worth looking up. */

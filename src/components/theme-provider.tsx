@@ -14,7 +14,9 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   return (
     <NextThemesProvider
       attribute="class"
-      defaultTheme="system"
+      // The palette is designed dark first; light is a supported alternative
+      // rather than the baseline, so a first-time visitor lands on the dark one.
+      defaultTheme="dark"
       enableSystem
       disableTransitionOnChange
     >

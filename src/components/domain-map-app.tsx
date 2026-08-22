@@ -248,6 +248,7 @@ export function DomainMapApp() {
       <main className="relative h-[46dvh] min-h-[18rem] shrink-0 lg:h-full lg:min-h-0 lg:flex-1">
         <DomainGlobe
           results={results}
+          statusFilter={statusFilter}
           selectedIso={selectedIso}
           onSelect={handleSelect}
           focusIso={focusIso}
