@@ -7,6 +7,7 @@ import { flagFor } from "@/lib/countries";
 import { ianaUrl } from "@/data/cctlds";
 import { STATUS_META } from "@/lib/domain-status";
 import { StatusBadge } from "@/components/status-badge";
+import { registrarLinks } from "@/lib/registrars";
 import type { Ownership } from "@/lib/domain-status";
 import type { CountryResult } from "@/lib/use-scan";
 
@@ -51,7 +52,14 @@ export function CountryDetail({
   onClose: () => void;
 }) {
   const { country } = result;
-  const registered = result.status === "owned" || result.status === "taken";
+  /**
+   * Shown whenever there's an actual name to claim, not only once the lookup
+   * already says "registered". The lookup can be wrong — DNS or a
+   * third-party WHOIS proxy said "available" or "unknown" for a domain that
+   * is, in fact, yours — and "It's mine" needs to be assertable exactly in
+   * that case, not just used to correct an already-correct "taken" guess.
+   */
+  const claimable = result.domain !== null && result.status !== "closed";
   const registeredOn = formatDate(result.registeredOn);
   const expiresOn = formatDate(result.expiresOn);
 
@@ -91,12 +99,45 @@ export function CountryDetail({
         </p>
       ) : null}
 
+      {(result.status === "available" || result.status === "restricted") && result.domain ? (
+        <div className="space-y-1.5">
+          <div className="flex flex-wrap gap-1.5">
+            {registrarLinks(result.domain).map((registrar) => (
+              <Button key={registrar.name} variant="outline" size="sm" className="h-7 gap-1.5 text-xs" asChild>
+                <a href={registrar.url} target="_blank" rel="noreferrer nofollow">
+                  {registrar.name}
+                  <ExternalLink className="size-3" />
+                </a>
+              </Button>
+            ))}
+          </div>
+          {result.status === "restricted" ? (
+            <p className="text-muted-foreground text-xs leading-relaxed">
+              101domain specialises in ccTLDs like this one that need a local
+              presence to register.
+            </p>
+          ) : null}
+        </div>
+      ) : null}
+
       {result.confidence === "low" && result.status !== "closed" ? (
         <p className="text-muted-foreground text-xs leading-relaxed">
-          {country.tld ? `.${country.tld}` : "This registry"} publishes no RDAP
-          service, so this is inferred from DNS. A domain that is registered but
-          never pointed anywhere looks free from the outside — worth confirming
-          with a registrar before you count on it.
+          {result.source === "whois" ? (
+            <>
+              {country.tld ? `.${country.tld}` : "This registry"} has no RDAP
+              service and DNS couldn&rsquo;t settle it, so this came from a
+              third-party WHOIS lookup rather than the registry directly —
+              worth confirming with a registrar before you count on it.
+            </>
+          ) : (
+            <>
+              {country.tld ? `.${country.tld}` : "This registry"} publishes no
+              RDAP service, so this is inferred from DNS. A domain that is
+              registered but never pointed anywhere looks free from the
+              outside — worth confirming with a registrar before you count on
+              it.
+            </>
+          )}
         </p>
       ) : null}
 
@@ -134,11 +175,13 @@ export function CountryDetail({
               ? "Registry policy"
               : result.source === "none"
                 ? "Not checked yet"
-                : result.source.toUpperCase()}
+                : result.source === "whois"
+                  ? "WHOIS (third-party)"
+                  : result.source.toUpperCase()}
         </Field>
       </dl>
 
-      {registered ? (
+      {claimable ? (
         <>
           <Separator />
           <div className="space-y-2">

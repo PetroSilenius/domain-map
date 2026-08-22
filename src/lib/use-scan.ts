@@ -210,16 +210,27 @@ export function deriveResults(
     const override = project.overrides[country.iso];
     const ownership = override ?? guess.ownership;
 
+    // "Yours" is a claim of fact, not a vote alongside the lookup's guess: you
+    // cannot own a domain that isn't registered, so saying it's yours settles
+    // both questions at once. Without this, marking a domain the app
+    // couldn't classify (or misread as free) as "mine" had no visible effect —
+    // deriveStatus still fell through to "unknown"/"available" because it
+    // only ever consults ownership once registration itself reads "registered".
+    const status =
+      override === "yours"
+        ? "owned"
+        : deriveStatus({
+            eligibility: country.eligibility,
+            hasSuffix: true,
+            registration: record.registration,
+            ownership,
+          });
+
     results.set(country.iso, {
       country,
       iso: country.iso,
       domain,
-      status: deriveStatus({
-        eligibility: country.eligibility,
-        hasSuffix: true,
-        registration: record.registration,
-        ownership,
-      }),
+      status,
       source: listed.has(domain) ? "listed" : record.source,
       confidence: record.confidence,
       registrant: record.registrant,

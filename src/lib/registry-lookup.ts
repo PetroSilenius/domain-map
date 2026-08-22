@@ -4,22 +4,29 @@ import { Resolver } from "node:dns/promises";
 /**
  * Server-side registry lookups.
  *
- * Two sources, in order of authority:
+ * Three sources, tried in order of authority and only as far as needed:
  *
- *   RDAP  the registry's own structured WHOIS successor. Definitive, but only
- *         about 70 of the ~250 ccTLDs publish one — .se, .de, .io, .co and
- *         plenty of other popular ones do not.
- *   DNS   the fallback. Nameservers at the apex prove a domain is registered.
- *         The absence of them is only evidence, not proof: a domain can be
- *         registered and never delegated, and it looks identical to a free one
- *         from the outside. Those results are marked low confidence.
+ *   RDAP   our own direct query to the registry's structured WHOIS successor.
+ *          Definitive, but only about 70 of the ~250 ccTLDs publish one — .se,
+ *          .de, .io, .co and plenty of other popular ones do not.
+ *   DNS    nameservers at the apex prove a domain is registered. Their
+ *          absence is only evidence, not proof: a domain can be registered
+ *          and never delegated, and it looks identical to a free one from the
+ *          outside. Results from here are marked low confidence.
+ *   WHOIS  a last resort, only reached when both of the above come back
+ *          genuinely inconclusive (a DNS timeout or a resolver error, not a
+ *          clean "no such name"). Goes through who-dat.as93.net, a free, open
+ *          source, unauthenticated WHOIS/RDAP proxy — see lookupWhoisProxy()
+ *          below. It is a third party we do not control, so it is only ever
+ *          consulted for the minority of domains the first two sources
+ *          couldn't settle, never as the primary path.
  */
 
 /** What a lookup can establish about a name. */
 export type RegistryRecord = {
   domain: string;
   registration: "registered" | "available" | "unknown";
-  source: "rdap" | "dns";
+  source: "rdap" | "dns" | "whois";
   confidence: "high" | "low";
   registrant?: string;
   nameservers?: string[];
@@ -245,6 +252,73 @@ async function lookupDns(domain: string): Promise<RegistryRecord> {
   }
 }
 
+/**
+ * who-dat's own response shape — RDAP and WHOIS results normalised into one
+ * JSON structure. https://github.com/lissy93/who-dat (self-hostable; the
+ * public instance at who-dat.as93.net is free and needs no API key).
+ */
+type WhoDatResponse = {
+  isRegistered?: boolean;
+  registrar?: { name?: string | null };
+  nameservers?: { name?: string | null }[];
+  dates?: { created?: string | null; expires?: string | null };
+  contacts?: {
+    registrant?: { organization?: string | null; name?: string | null };
+  };
+  error?: unknown;
+};
+
+const WHOIS_PROXY_TIMEOUT_MS = 7_000;
+
+/**
+ * Last-resort lookup through a third-party WHOIS/RDAP proxy, for the domains
+ * our own RDAP call has no server for and DNS couldn't read cleanly. Returns
+ * `null` — not "unknown" — on any failure, so the caller falls back to
+ * whatever DNS already found rather than treating a proxy hiccup as a verdict.
+ */
+async function lookupWhoisProxy(domain: string): Promise<RegistryRecord | null> {
+  let response: Response;
+  try {
+    response = await fetch(`https://who-dat.as93.net/${encodeURIComponent(domain)}`, {
+      signal: AbortSignal.timeout(WHOIS_PROXY_TIMEOUT_MS),
+      headers: { accept: "application/json" },
+    });
+  } catch {
+    return null;
+  }
+  if (!response.ok) return null;
+
+  let payload: WhoDatResponse;
+  try {
+    payload = (await response.json()) as WhoDatResponse;
+  } catch {
+    return null;
+  }
+  if (payload.error || typeof payload.isRegistered !== "boolean") return null;
+
+  if (!payload.isRegistered) {
+    return { domain, registration: "available", source: "whois", confidence: "low" };
+  }
+
+  const nameservers = (payload.nameservers ?? [])
+    .map((ns) => ns.name?.trim().toLowerCase().replace(/\.$/, "") ?? "")
+    .filter((name) => /^[a-z0-9.-]+\.[a-z]{2,}$/.test(name));
+
+  return {
+    domain,
+    registration: "registered",
+    source: "whois",
+    confidence: "low",
+    registrant:
+      payload.contacts?.registrant?.organization?.trim() ||
+      payload.contacts?.registrant?.name?.trim() ||
+      undefined,
+    nameservers: nameservers.length ? [...new Set(nameservers)].sort() : undefined,
+    registeredOn: payload.dates?.created ?? undefined,
+    expiresOn: payload.dates?.expires ?? undefined,
+  };
+}
+
 const cache = new Map<string, { at: number; record: RegistryRecord }>();
 
 function readCache(domain: string): RegistryRecord | undefined {
@@ -277,7 +351,13 @@ export async function lookupDomain(domain: string): Promise<RegistryRecord> {
   if (existing) return existing;
 
   const promise = (async () => {
-    const record = (await lookupRdap(domain)) ?? (await lookupDns(domain));
+    const rdap = await lookupRdap(domain);
+    let record = rdap ?? (await lookupDns(domain));
+    // DNS could not tell registered from free — try the WHOIS proxy before
+    // giving up. Its own failure just means the DNS verdict stands.
+    if (!rdap && record.registration === "unknown") {
+      record = (await lookupWhoisProxy(domain)) ?? record;
+    }
     writeCache(domain, record);
     return record;
   })()

@@ -147,10 +147,13 @@
   .maplibregl-ctrl-attrib-button {
     @apply bg-transparent! dark:invert;
   }
-  /* Unstyled buttons default to the arrow cursor in most browsers; our own
-     zoom controls render as plain <button> elements inside MapLibre's
-     container and need the same pointer cursor as everything else clickable. */
-  .maplibregl-map button {
+  /* Unstyled buttons default to the arrow cursor in most browsers. Applies to
+     every button in the app — the legend chips and country rows are plain
+     <button>s, not the shadcn Button component, so this can't just live on
+     one component's base classes. Disabled buttons keep the browser default,
+     since shadcn's own disabled:pointer-events-none already makes the cursor
+     moot for those and "pointer" would be a lie about what a click does. */
+  button:not(:disabled) {
     @apply cursor-pointer;
   }
 }

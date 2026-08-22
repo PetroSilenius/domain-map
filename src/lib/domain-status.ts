@@ -23,7 +23,7 @@ export type DomainStatus =
   | "pending";
 
 /** How a result was established, which decides how much to trust it. */
-export type LookupSource = "listed" | "rdap" | "dns" | "policy" | "none";
+export type LookupSource = "listed" | "rdap" | "dns" | "whois" | "policy" | "none";
 
 export type DomainResult = {
   iso: string;
