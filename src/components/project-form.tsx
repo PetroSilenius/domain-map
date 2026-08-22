@@ -5,21 +5,17 @@ import { Link2, Loader2, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  brandFromDomain,
-  isValidBrand,
-  parseDomainList,
-  type Project,
-} from "@/lib/project";
+import { isValidBrand, parseDomainList, type Project } from "@/lib/project";
 
 /**
- * The whole input surface: the domains you already own, and the brand label
- * everything else is checked under.
+ * The whole input surface. Brand comes first and is the field that matters —
+ * it's what gets checked in every country. The domains you already own are
+ * secondary: optional, and only there to help spot which results are yours.
  *
- * The brand is derived from the first domain you list, because typing it twice
- * is the kind of thing that makes people close a tab. It stays editable for the
- * cases where the derivation is wrong — a domain like `getdataatti.com` when
- * the brand you want to check is `dataatti`.
+ * The two used to be coupled — brand auto-filled from the first owned domain —
+ * but that assumes the same name everywhere, which isn't always true (you can
+ * own `dataatti.fi` and still be checking availability for a different brand,
+ * `lyyti`). Independent fields handle both cases without asking which one you meant.
  */
 export function ProjectForm({
   project,
@@ -40,17 +36,10 @@ export function ProjectForm({
   // Seeded once from `project`. The parent remounts this form when a project
   // arrives from a link or from storage, which is cheaper and less surprising
   // than mirroring props into state on every change.
+  const [brand, setBrand] = useState(project.brand);
   const [domainsText, setDomainsText] = useState(project.owned.join(", "));
-  /**
-   * `null` means the field has never been touched, so it follows the first
-   * domain. Anything else is what the person typed and is shown verbatim —
-   * including an empty string, so the field can actually be cleared.
-   */
-  const [typedBrand, setTypedBrand] = useState<string | null>(project.brand || null);
 
   const domains = parseDomainList(domainsText);
-  const derivedBrand = domains[0] ? brandFromDomain(domains[0]) : "";
-  const brand = typedBrand ?? derivedBrand;
   const ready = isValidBrand(brand);
 
   function submit(event: React.FormEvent) {
@@ -62,7 +51,28 @@ export function ProjectForm({
   return (
     <form onSubmit={submit} className="space-y-4">
       <div className="space-y-2">
-        <Label htmlFor="owned">Domains you already own</Label>
+        <Label htmlFor="brand">Brand</Label>
+        <Input
+          id="brand"
+          value={brand}
+          onChange={(event) => setBrand(event.target.value.toLowerCase())}
+          placeholder="lyyti"
+          autoComplete="off"
+          spellCheck={false}
+          autoFocus
+          className="h-12 font-mono text-lg"
+        />
+        {brand && !ready ? (
+          <p className="text-destructive text-xs">
+            Only letters, digits, and hyphens.
+          </p>
+        ) : null}
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="owned" className="text-muted-foreground font-normal">
+          Already own a domain? (optional)
+        </Label>
         <Input
           id="owned"
           value={domainsText}
@@ -72,28 +82,6 @@ export function ProjectForm({
           spellCheck={false}
           enterKeyHint="go"
         />
-        <p className="text-muted-foreground text-xs">
-          List one or more. They are treated as yours, and their nameservers are
-          used to recognise your other domains.
-        </p>
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="brand">Brand to check everywhere</Label>
-        <Input
-          id="brand"
-          value={brand}
-          onChange={(event) => setTypedBrand(event.target.value.toLowerCase())}
-          placeholder={derivedBrand || "dataatti"}
-          autoComplete="off"
-          spellCheck={false}
-          className="font-mono"
-        />
-        {brand && !ready ? (
-          <p className="text-destructive text-xs">
-            A brand can only contain letters, digits, and hyphens.
-          </p>
-        ) : null}
       </div>
 
       <div className="flex flex-wrap gap-2">

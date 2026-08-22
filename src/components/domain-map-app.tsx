@@ -137,8 +137,7 @@ export function DomainMapApp() {
             <ThemeToggle />
           </div>
           <p className="text-muted-foreground mt-1 text-sm leading-relaxed">
-            See which countries your name is still free in — and which ones would
-            let you register there.
+            Check your brand&rsquo;s domain, country by country.
           </p>
         </header>
 
@@ -230,7 +229,7 @@ export function DomainMapApp() {
         {!scanned && !scanning ? (
           <div className="pointer-events-none absolute inset-x-0 bottom-6 flex justify-center px-6">
             <p className="bg-background/85 text-muted-foreground rounded-full border px-4 py-2 text-center text-xs shadow-sm backdrop-blur">
-              Enter a domain you own to colour the globe.
+              Type a brand to colour the globe.
             </p>
           </div>
         ) : null}

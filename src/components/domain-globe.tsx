@@ -277,8 +277,12 @@ export function DomainGlobe({
         center={[10, 25]}
         zoom={1.75}
         // Stops the globe shrinking into a marble surrounded by empty page.
-        minZoom={1.3}
-        maxZoom={9}
+        minZoom={1.6}
+        // Past a single island country filling the screen there's nothing left
+        // to reveal — no street tiles here, just a bigger flat colour — so the
+        // ceiling stops at "one small country, full screen" rather than at
+        // MapLibre's default of 22.
+        maxZoom={6}
         className="size-full"
       >
         <GlobeLayers
