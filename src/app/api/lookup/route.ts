@@ -31,6 +31,21 @@ export const runtime = "nodejs";
 const MAX_DOMAINS_PER_REQUEST = 300;
 /** In-flight lookups at once. Registry-polite, and fast enough that a full scan streams in a handful of seconds. */
 const CONCURRENCY = 12;
+/**
+ * Hard ceiling on how long this request stays open, regardless of how many
+ * domains it was given or how slow individual lookups turn out to be. A
+ * domain with no RDAP server that also stalls on DNS can burn most of two
+ * timeouts (DNS, then the WHOIS fallback) before answering — call it worth
+ * up to ~17s in a genuinely bad case. Serverless hosts kill a function
+ * outright past their own execution limit (some default to as little as
+ * 10s), and a hard kill drops the connection with no chance to close the
+ * stream cleanly, which the client reads as every domain it hadn't heard
+ * back on yet failing at once. Closing the stream ourselves comfortably
+ * before that point means the client instead sees a clean end-of-stream and
+ * marks only whatever's left in *this* request as unknown — a graceful,
+ * bounded degradation instead of a hard failure.
+ */
+const REQUEST_DEADLINE_MS = 9_000;
 
 const DOMAIN_PATTERN = /^(?=.{1,253}$)([a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,63}$/;
 
@@ -71,8 +86,21 @@ export async function POST(request: Request): Promise<Response> {
   const encoder = new TextEncoder();
   const stream = new ReadableStream<Uint8Array>({
     async start(controller) {
+      let closed = false;
+      const close = () => {
+        if (closed) return;
+        closed = true;
+        controller.close();
+      };
+      // Lookups still in flight when this fires are abandoned as far as this
+      // response is concerned, but keep running to completion in the
+      // background — lookupDomain's own cache means that work isn't wasted,
+      // it just benefits whichever request asks for that domain next.
+      const deadline = setTimeout(close, REQUEST_DEADLINE_MS);
+
       try {
         await forEachWithConcurrency(domains, CONCURRENCY, lookupDomain, (record) => {
+          if (closed) return; // past the deadline; enqueueing on a closed stream throws
           controller.enqueue(encoder.encode(`${JSON.stringify(record)}\n`));
         });
       } finally {
@@ -81,7 +109,8 @@ export async function POST(request: Request): Promise<Response> {
         // signal to the client — a line simply never arriving for a domain
         // is itself the only failure mode, and the client already handles
         // that by filling in what it never received once the stream ends.
-        controller.close();
+        clearTimeout(deadline);
+        close();
       }
     },
   });

@@ -132,13 +132,21 @@ npm run build:geo  # regenerate the map geometry (see below)
   CORS headers. It reports registry facts only; deciding what is *yours*
   happens on the client, which keeps the route stateless and its answers
   cacheable.
-- A full sweep is ~230 domains, sent as a single request that streams back
-  one line of JSON per domain the moment its lookup finishes (NDJSON, 12
-  lookups in flight server-side at once) rather than collecting everything
-  into one response first. Registries answer at wildly different speeds, and
-  the fastest results land well under a second — the globe starts painting
-  almost immediately instead of sitting on a spinner until the single
-  slowest domain in the whole scan comes back.
+- A full sweep is ~230 domains, split into batches of 30, three batches in
+  flight at once. Each batch streams back one line of JSON per domain the
+  moment its lookup finishes (NDJSON, 12 lookups in flight server-side per
+  batch) rather than collecting everything into one response first —
+  registries answer at wildly different speeds, and the fastest results land
+  well under a second, so the globe starts painting almost immediately
+  instead of sitting on a spinner. Batches stay small on purpose: one request
+  covering the whole scan would mean a single slow or interrupted request
+  could take a large chunk of the scan down with it — worse, on a host that
+  kills a function past its own execution limit, an in-progress request just
+  vanishes with no chance to close the stream cleanly, which reads as
+  everything not yet answered failing at once. The route also closes its own
+  stream after 9 seconds regardless of how many domains are left in that
+  batch, so a pathologically slow domain can only ever cost that one batch,
+  never the request hanging past whatever timeout the host enforces.
 
 ### Generated files
 
