@@ -58,8 +58,13 @@ export function CountryDetail({
    * third-party WHOIS proxy said "available" or "unknown" for a domain that
    * is, in fact, yours — and "It's mine" needs to be assertable exactly in
    * that case, not just used to correct an already-correct "taken" guess.
+   *
+   * Excluded when the domain came from the "already own" list: that's not a
+   * guess to confirm or correct, it's the one fact the whole page treats as
+   * given, so there's nothing for the buttons to do.
    */
-  const claimable = result.domain !== null && result.status !== "closed";
+  const claimable =
+    result.domain !== null && result.status !== "closed" && result.source !== "listed";
   const registeredOn = formatDate(result.registeredOn);
   const expiresOn = formatDate(result.expiresOn);
 
