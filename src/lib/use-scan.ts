@@ -12,11 +12,6 @@ import {
 import { fingerprint, guessOwnership } from "@/lib/ownership";
 import type { Project } from "@/lib/project";
 
-/** Must not exceed the API route's own per-request cap. */
-const BATCH_SIZE = 40;
-/** Batches in flight at once. Three keeps a full world scan under ~10s. */
-const PARALLEL_BATCHES = 3;
-
 export type ScanState = {
   /** Registry facts, keyed by domain name. */
   records: Record<string, RegistryRecord>;
@@ -26,36 +21,16 @@ export type ScanState = {
   error: string | null;
 };
 
-function chunk<T>(items: T[], size: number): T[][] {
-  const chunks: T[][] = [];
-  for (let i = 0; i < items.length; i += size) chunks.push(items.slice(i, i + size));
-  return chunks;
-}
-
-async function fetchBatch(
-  domains: string[],
-  signal: AbortSignal,
-): Promise<Record<string, RegistryRecord>> {
-  const response = await fetch("/api/lookup", {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify({ domains }),
-    signal,
-  });
-  if (!response.ok) {
-    const body = (await response.json().catch(() => null)) as { error?: string } | null;
-    throw new Error(body?.error ?? `Lookup failed (HTTP ${response.status})`);
-  }
-  const body = (await response.json()) as { results: Record<string, RegistryRecord> };
-  return body.results;
-}
-
 /**
  * Runs the world scan and keeps the accumulated registry answers.
  *
- * Results stream in batch by batch rather than landing all at once: a full
- * sweep is ~230 domains across registries that answer at very different
- * speeds, and watching the globe fill in beats watching a spinner.
+ * One streaming request covers the whole scan. `/api/lookup` writes back a
+ * line of JSON per domain as each lookup finishes rather than waiting to
+ * collect a full response — a world sweep is ~230 domains against registries
+ * that answer at wildly different speeds, and the fastest of them land well
+ * under a second. Waiting for a batch to fully resolve before painting
+ * anything, the previous design, meant the whole UI sat idle until the
+ * single slowest lookup in that batch finished.
  */
 export function useScan(project: Project) {
   const [state, setState] = useState<ScanState>({
@@ -77,54 +52,83 @@ export function useScan(project: Project) {
     const targets = REGISTRABLE.map((country) => domainFor(brand, country)).filter(
       (domain): domain is string => domain !== null,
     );
-    // The domains you listed are looked up first and separately: their
-    // nameservers and registrant are what every other guess is compared to.
+    // The domains you listed are sent first: their nameservers and
+    // registrant are what every other guess gets compared to, though the
+    // server processes the whole list concurrently regardless of order.
     const ordered = [...new Set([...owned, ...targets])];
 
     setState({ records: {}, progress: 0, scanning: true, error: null });
 
-    const batches = chunk(ordered, BATCH_SIZE);
-    let done = 0;
+    const received: Record<string, RegistryRecord> = {};
     let failed = 0;
 
+    /** One place to fill in whatever never got a line — a clean stream end short of the full list, or a request that failed outright. */
+    function fillMissing(message: string) {
+      for (const domain of ordered) {
+        if (domain in received) continue;
+        failed++;
+        received[domain] = {
+          domain,
+          registration: "unknown",
+          source: "dns",
+          confidence: "low",
+          error: message,
+        };
+      }
+    }
+
     try {
-      for (let i = 0; i < batches.length; i += PARALLEL_BATCHES) {
-        const wave = batches.slice(i, i + PARALLEL_BATCHES);
-        const settled = await Promise.allSettled(
-          wave.map((batch) => fetchBatch(batch, controller.signal)),
-        );
-        if (controller.signal.aborted) return;
+      const response = await fetch("/api/lookup", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ domains: ordered }),
+        signal: controller.signal,
+      });
+      if (!response.ok) {
+        const errorBody = (await response.json().catch(() => null)) as { error?: string } | null;
+        throw new Error(errorBody?.error ?? `Lookup failed (HTTP ${response.status})`);
+      }
+      if (!response.body) throw new Error("This browser can't stream the response.");
 
-        const merged: Record<string, RegistryRecord> = {};
-        settled.forEach((result, index) => {
-          if (result.status === "fulfilled") {
-            Object.assign(merged, result.value);
-          } else {
-            // One failed batch should not sink the scan; mark its domains
-            // unknown and keep going.
-            failed += wave[index].length;
-            for (const domain of wave[index]) {
-              merged[domain] = {
-                domain,
-                registration: "unknown",
-                source: "dns",
-                confidence: "low",
-                error: "Lookup failed",
-              };
-            }
-          }
-        });
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      // A read() chunk can split a line across two reads, so the trailing
+      // partial line is held over rather than parsed early.
+      let carry = "";
 
-        done += wave.reduce((sum, batch) => sum + batch.length, 0);
+      for (;;) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        carry += decoder.decode(value, { stream: true });
+        const lines = carry.split("\n");
+        carry = lines.pop() ?? "";
+        if (lines.length === 0) continue;
+
+        for (const line of lines) {
+          if (!line) continue;
+          const record = JSON.parse(line) as RegistryRecord;
+          received[record.domain] = record;
+        }
         setState((previous) => ({
           ...previous,
-          records: { ...previous.records, ...merged },
-          progress: done / ordered.length,
+          records: { ...received },
+          progress: Object.keys(received).length / ordered.length,
         }));
       }
+      if (carry.trim()) {
+        const record = JSON.parse(carry) as RegistryRecord;
+        received[record.domain] = record;
+      }
+
+      // A domain the server never got to sending — the connection dropped
+      // mid-stream, say — reads the same as a lookup failure rather than
+      // staying stuck on "not checked" forever.
+      fillMissing("Lookup failed");
 
       setState((previous) => ({
         ...previous,
+        records: { ...received },
         scanning: false,
         progress: 1,
         error: failed
@@ -133,9 +137,12 @@ export function useScan(project: Project) {
       }));
     } catch (error) {
       if (controller.signal.aborted) return;
+      fillMissing("Lookup failed");
       setState((previous) => ({
         ...previous,
+        records: { ...received },
         scanning: false,
+        progress: 1,
         error: error instanceof Error ? error.message : "Scan failed.",
       }));
     }

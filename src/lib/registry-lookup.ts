@@ -378,22 +378,26 @@ export async function lookupDomain(domain: string): Promise<RegistryRecord> {
   return promise;
 }
 
-/** Runs `worker` over `items` with at most `limit` in flight at once. */
-export async function mapWithConcurrency<T, R>(
+/**
+ * Runs `worker` over `items` with at most `limit` in flight, calling
+ * `onResult` the instant each one settles — in completion order, not input
+ * order, which is the point: a caller streaming these out gets the fast
+ * answers first instead of waiting on whichever one is slowest.
+ */
+export async function forEachWithConcurrency<T, R>(
   items: T[],
   limit: number,
   worker: (item: T) => Promise<R>,
-): Promise<R[]> {
-  const results = new Array<R>(items.length);
+  onResult: (result: R) => void,
+): Promise<void> {
   let next = 0;
 
   async function run(): Promise<void> {
     while (next < items.length) {
       const index = next++;
-      results[index] = await worker(items[index]);
+      onResult(await worker(items[index]));
     }
   }
 
   await Promise.all(Array.from({ length: Math.min(limit, items.length) }, run));
-  return results;
 }
