@@ -133,12 +133,3 @@ export function saveProject(project: Project): void {
     // Storage is a convenience here; the URL is the durable copy.
   }
 }
-
-export function clearProject(): void {
-  if (typeof window === "undefined") return;
-  try {
-    window.localStorage.removeItem(STORAGE_KEY);
-  } catch {
-    // Nothing to do — the caller has already reset its own state.
-  }
-}

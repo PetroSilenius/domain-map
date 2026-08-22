@@ -7,8 +7,12 @@ import type { StyleSpecification } from "maplibre-gl";
  * with an ocean painted in.
  *
  * The ocean is neutral grey rather than blue on purpose: country fills sit
- * slightly transparent on top of it, so whatever is underneath tints every
- * status. Grey keeps the palette honest; blue would push all six toward it.
+ * transparent on top of it, so whatever is underneath tints every status.
+ * Grey keeps the palette honest; blue would push all six toward it. The dark
+ * value is the "Water" tone from a basemap-style reference palette, kept a
+ * step lighter than the page background — on a near-black page an equally
+ * dark ocean makes the sphere read as a hole rather than an object, and its
+ * silhouette disappears wherever no coastline happens to fall.
  */
 function ocean(color: string): StyleSpecification {
   return {
@@ -18,24 +22,19 @@ function ocean(color: string): StyleSpecification {
   };
 }
 
-/**
- * The ocean is deliberately a step *lighter* than the page behind it. On a
- * near-black background an equally dark ocean makes the sphere read as a hole
- * rather than an object, and its silhouette disappears entirely wherever no
- * coastline happens to fall.
- */
 export const GLOBE_STYLES = {
   light: ocean("#e3e3e7"),
-  dark: ocean("#1e1e22"),
+  dark: ocean("#1f1f1f"),
 };
 
-/** Country outlines, and the ring drawn around the selected country. */
 /**
+ * Country outlines, and the ring drawn around the selected country.
+ *
  * Borders are drawn in the ocean colour, so they vanish at the coast and show
  * up only where two countries meet — which is the only place they carry
  * information.
  */
 export const OUTLINE = {
   light: { line: "#e3e3e7", selected: "#18181b" },
-  dark: { line: "#1e1e22", selected: "#fafafa" },
+  dark: { line: "#1f1f1f", selected: "#fafafa" },
 };

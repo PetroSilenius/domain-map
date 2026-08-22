@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Loader2, Search, X } from "lucide-react";
+import { Link2, Loader2, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -25,14 +25,15 @@ export function ProjectForm({
   project,
   onSubmit,
   onCancel,
-  onClear,
+  onShare,
   scanning,
   progress,
 }: {
   project: Project;
   onSubmit: (project: Project) => void;
   onCancel: () => void;
-  onClear: () => void;
+  /** Copies the current brand and domain list into a link. Disabled until there is one to share. */
+  onShare: () => void;
   scanning: boolean;
   progress: number;
 }) {
@@ -79,22 +80,15 @@ export function ProjectForm({
 
       <div className="space-y-2">
         <Label htmlFor="brand">Brand to check everywhere</Label>
-        <div className="flex items-center gap-2">
-          <Input
-            id="brand"
-            value={brand}
-            onChange={(event) => setTypedBrand(event.target.value.toLowerCase())}
-            placeholder={derivedBrand || "dataatti"}
-            autoComplete="off"
-            spellCheck={false}
-            className="font-mono"
-          />
-          {brand ? (
-            <span className="text-muted-foreground shrink-0 font-mono text-sm">
-              .fi .se .de …
-            </span>
-          ) : null}
-        </div>
+        <Input
+          id="brand"
+          value={brand}
+          onChange={(event) => setTypedBrand(event.target.value.toLowerCase())}
+          placeholder={derivedBrand || "dataatti"}
+          autoComplete="off"
+          spellCheck={false}
+          className="font-mono"
+        />
         {brand && !ready ? (
           <p className="text-destructive text-xs">
             A brand can only contain letters, digits, and hyphens.
@@ -114,12 +108,16 @@ export function ProjectForm({
             Check every country
           </Button>
         )}
-        {project.brand ? (
-          <Button type="button" variant="ghost" onClick={onClear} className="gap-2">
-            <X className="size-4" />
-            Clear
-          </Button>
-        ) : null}
+        <Button
+          type="button"
+          variant="outline"
+          onClick={onShare}
+          disabled={!ready}
+          className="gap-2"
+        >
+          <Link2 className="size-4" />
+          Share
+        </Button>
       </div>
     </form>
   );

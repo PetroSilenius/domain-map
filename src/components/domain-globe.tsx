@@ -294,7 +294,7 @@ export function DomainGlobe({
           onSelect={onSelect}
           onHover={setHoveredIso}
         />
-        <MapControls position="bottom-right" showZoom showCompass />
+        <MapControls position="bottom-right" showZoom />
       </MapCanvas>
 
       {hovered ? (

@@ -2,16 +2,14 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
-import { Globe, Link2, Loader2 } from "lucide-react";
+import { Globe, Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { DomainStatus, Ownership } from "@/lib/domain-status";
 import {
   EMPTY_PROJECT,
-  clearProject,
   fromSearchParams,
   loadProject,
   saveProject,
@@ -41,8 +39,7 @@ export function DomainMapApp() {
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<Set<DomainStatus>>(new Set());
 
-  const { records, results, progress, scanning, error, scan, cancel, reset } =
-    useScan(project);
+  const { records, results, progress, scanning, error, scan, cancel } = useScan(project);
 
   /**
    * A shared link wins over local storage: someone following a link expects to
@@ -79,17 +76,6 @@ export function DomainMapApp() {
     },
     [scan],
   );
-
-  const handleClear = useCallback(() => {
-    cancel();
-    reset();
-    clearProject();
-    setProject(EMPTY_PROJECT);
-    setSelectedIso(null);
-    setStatusFilter(new Set());
-    setQuery("");
-    window.history.replaceState(null, "", window.location.pathname);
-  }, [cancel, reset]);
 
   const handleSelect = useCallback((iso: string | null) => {
     setSelectedIso(iso);
@@ -164,7 +150,7 @@ export function DomainMapApp() {
             project={project}
             onSubmit={handleSubmit}
             onCancel={cancel}
-            onClear={handleClear}
+            onShare={share}
             scanning={scanning}
             progress={progress}
           />
@@ -182,25 +168,13 @@ export function DomainMapApp() {
                 active={statusFilter}
                 onToggle={toggleStatus}
               />
-              <div className="flex gap-2">
-                <Input
-                  value={query}
-                  onChange={(event) => setQuery(event.target.value)}
-                  placeholder="Find a country…"
-                  className="h-8 text-sm"
-                  autoComplete="off"
-                />
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={share}
-                  className="h-8 shrink-0 gap-1.5"
-                >
-                  <Link2 className="size-3.5" />
-                  Share
-                </Button>
-              </div>
+              <Input
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+                placeholder="Find a country…"
+                className="h-8 text-sm"
+                autoComplete="off"
+              />
             </div>
 
             {selected ? (

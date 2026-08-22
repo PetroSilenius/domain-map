@@ -147,4 +147,10 @@
   .maplibregl-ctrl-attrib-button {
     @apply bg-transparent! dark:invert;
   }
+  /* Unstyled buttons default to the arrow cursor in most browsers; our own
+     zoom controls render as plain <button> elements inside MapLibre's
+     container and need the same pointer cursor as everything else clickable. */
+  .maplibregl-map button {
+    @apply cursor-pointer;
+  }
 }

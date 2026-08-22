@@ -84,15 +84,15 @@ export type StatusMeta = {
 };
 
 /**
- * Country fills sit slightly transparent over the globe's grey, which knocks
- * the saturation back and lets the statuses read as a set rather than as six
- * unrelated colours.
+ * Country fills sit transparent over the globe's grey, which knocks the
+ * saturation back and lets the statuses read as a set rather than as six
+ * unrelated colours — closer to a tint over the map than a sticker on it.
  */
-export const FILL_OPACITY = 0.85;
+export const FILL_OPACITY = 0.72;
 /** Countries filtered out of the legend selection, faded into the ocean. */
-export const FILL_OPACITY_DIMMED = 0.14;
-/** The country under the cursor comes forward to full strength. */
-export const FILL_OPACITY_HOVER = 1;
+export const FILL_OPACITY_DIMMED = 0.12;
+/** The country under the cursor comes forward, but stays a tint rather than a block. */
+export const FILL_OPACITY_HOVER = 0.9;
 
 export const STATUS_META: Record<DomainStatus, StatusMeta> = {
   owned: {
@@ -106,19 +106,22 @@ export const STATUS_META: Record<DomainStatus, StatusMeta> = {
     color: { light: "#a33a33", dark: "#c4544c" },
   },
   available: {
-    label: "Free",
+    label: "Available",
     blurb: "Unregistered, open to anyone",
     color: { light: "#22649f", dark: "#4a86c9" },
   },
   restricted: {
-    label: "Restricted",
+    label: "Limited",
     blurb: "Unregistered, but needs local presence",
     color: { light: "#96661c", dark: "#c08a3e" },
   },
   closed: {
     label: "No registry",
     blurb: "Not sold to the public",
-    color: { light: "#a9a9b2", dark: "#43434b" },
+    // Matches the map's own neutral tones (see globe-style.ts) rather than
+    // getting a colour of its own — this status is an absence of data, not a
+    // finding.
+    color: { light: "#a9a9b2", dark: "#3d3d3d" },
   },
   unknown: {
     label: "Unknown",
@@ -130,7 +133,7 @@ export const STATUS_META: Record<DomainStatus, StatusMeta> = {
     blurb: "Not looked up yet",
     // Land with no answer yet: a step in from the ocean, so the continents are
     // visible before the first scan finishes.
-    color: { light: "#cbcbd1", dark: "#2c2c32" },
+    color: { light: "#cbcbd1", dark: "#292929" },
   },
 };
 

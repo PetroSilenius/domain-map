@@ -2,39 +2,40 @@
 
 import { useSyncExternalStore } from "react";
 import { useTheme } from "next-themes";
-import { Monitor, Moon, Sun } from "lucide-react";
+import { Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-const ORDER = ["system", "light", "dark"] as const;
-const ICONS = { system: Monitor, light: Sun, dark: Moon };
-const LABELS = { system: "Match system", light: "Light", dark: "Dark" };
-
+/**
+ * A plain light/dark switch — no "match system" third state.
+ *
+ * That state used to exist here, but it added a stop between light and dark
+ * that showed a monitor icon nobody asked for: `defaultTheme` is already
+ * "dark", so "system" was never the baseline, just a detour every click cycle
+ * passed through.
+ */
 export function ThemeToggle() {
-  const { theme, setTheme } = useTheme();
+  const { resolvedTheme, setTheme } = useTheme();
 
-  // The server cannot know the stored preference, so the button renders its
-  // neutral state until hydration rather than guessing and flipping. The store
-  // never changes, so the only re-render is the one hydration causes anyway.
+  // The server can't know the stored preference, so this renders the same
+  // "dark" icon it would resolve to by default until hydration confirms the
+  // real value — never a distinct in-between icon.
   const mounted = useSyncExternalStore(
     () => () => {},
     () => true,
     () => false,
   );
-
-  const current = (mounted ? theme : "system") as (typeof ORDER)[number];
-  const Icon = ICONS[current] ?? Monitor;
-  const next = ORDER[(ORDER.indexOf(current) + 1) % ORDER.length];
+  const isDark = mounted ? resolvedTheme === "dark" : true;
 
   return (
     <Button
       variant="ghost"
       size="icon"
       className="size-8"
-      onClick={() => setTheme(next)}
-      title={`Theme: ${LABELS[current] ?? "Match system"}`}
-      aria-label={`Theme: ${LABELS[current] ?? "Match system"}. Switch to ${LABELS[next]}.`}
+      onClick={() => setTheme(isDark ? "light" : "dark")}
+      title={isDark ? "Switch to light" : "Switch to dark"}
+      aria-label={isDark ? "Switch to light theme" : "Switch to dark theme"}
     >
-      <Icon className="size-4" />
+      {isDark ? <Moon className="size-4" /> : <Sun className="size-4" />}
     </Button>
   );
 }
