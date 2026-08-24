@@ -2,6 +2,8 @@
 
 Check one brand against every country's ccTLD, on a globe.
 
+![A globe coloured by domain status, with Google's own domains highlighted as owned across most of the world](.github/screenshot.png)
+
 You own `dataatti.fi`. Where else in the world is `dataatti` still yours to take?
 Type the domains you already own, and the map colours all ~250 countries by
 whether the matching domain is yours, taken, free, or free-but-restricted.

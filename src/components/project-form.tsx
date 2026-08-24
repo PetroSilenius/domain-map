@@ -45,7 +45,14 @@ export function ProjectForm({
   function submit(event: React.FormEvent) {
     event.preventDefault();
     if (!ready) return;
-    onSubmit({ brand, owned: domains, overrides: project.overrides });
+    // Overrides are keyed by country, not by domain, because the country is
+    // all the map ever shows. "Yours" recorded against, say, France meant
+    // `lyyti.fr` — carrying it forward under a new brand would silently
+    // apply it to `google.fr` instead, which nobody asked for. Only a
+    // resubmit of the same brand (editing the owned-domains list, retrying
+    // after a cancel) keeps the corrections; changing the brand starts clean.
+    const overrides = brand === project.brand ? project.overrides : {};
+    onSubmit({ brand, owned: domains, overrides });
   }
 
   return (
@@ -56,7 +63,7 @@ export function ProjectForm({
           id="brand"
           value={brand}
           onChange={(event) => setBrand(event.target.value.toLowerCase())}
-          placeholder="lyyti"
+          placeholder="google"
           autoComplete="off"
           spellCheck={false}
           autoFocus
@@ -77,7 +84,7 @@ export function ProjectForm({
           id="owned"
           value={domainsText}
           onChange={(event) => setDomainsText(event.target.value)}
-          placeholder="dataatti.fi, dataatti.se"
+          placeholder="google.com, google.us, google.fi"
           autoComplete="off"
           spellCheck={false}
           enterKeyHint="go"
