@@ -84,6 +84,9 @@ const OVERRIDES: Record<string, Override> = {
   BV: shut("Delegated to Norway but never opened for registration."),
   SK: local("Presence in the EU or EEA."),
   SM: local("San Marino company, resident, or trademark holder."),
+  UA: local(
+    "A trademark valid in Ukraine (or a WIPO member country) matching the name exactly — third-level domains like com.ua don't need one.",
+  ),
   VA: shut("Reserved for the Holy See; no public registration."),
   XK: { tld: null, suffix: undefined, eligibility: CLOSED, note: "No ccTLD has been delegated for Kosovo." },
 

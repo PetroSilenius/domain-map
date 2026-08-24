@@ -4,7 +4,7 @@ Check one brand against every country's ccTLD, on a globe.
 
 ![A globe coloured by domain status, with Google's own domains highlighted as owned across most of the world](.github/screenshot.png)
 
-You own `dataatti.fi`. Where else in the world is `dataatti` still yours to take?
+You own `google.fi`. Where else in the world is `google` still yours to take?
 Type the domains you already own, and the map colours all ~250 countries by
 whether the matching domain is yours, taken, free, or free-but-restricted.
 
@@ -177,7 +177,7 @@ their sources:
 - Ownership detection is a heuristic on public data. Correct it by hand — the
   correction is trusted completely, and travels in the share link.
 - Eligibility rules are a snapshot. Follow the IANA link for the current policy.
-- Second-level registries are handled (`dataatti.com.br`, `dataatti.co.za`),
+- Second-level registries are handled (`google.com.br`, `google.co.za`),
   but a registry that sells at both levels is checked at one.
 - Registrar deep links aren't guaranteed to carry every ccTLD; a name with a
   real local-presence requirement may still need a registrar based in that
