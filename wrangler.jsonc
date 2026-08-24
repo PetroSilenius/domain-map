@@ -2,6 +2,9 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "domain-map",
   "main": ".open-next/worker.js",
+  "build": {
+    "command": "npx opennextjs-cloudflare build"
+  },
   "compatibility_date": "2026-08-24",
   "compatibility_flags": ["nodejs_compat"],
   "assets": {
