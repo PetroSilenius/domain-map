@@ -7,7 +7,7 @@
     "predev": "node scripts/copy-maplibre-worker.mjs",
     "dev": "next dev",
     "prebuild": "node scripts/copy-maplibre-worker.mjs",
-    "build": "next build",
+    "build": "opennextjs-cloudflare build",
     "start": "next start",
     "lint": "eslint src --max-warnings=0",
     "typecheck": "tsc --noEmit",
