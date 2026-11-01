@@ -259,6 +259,7 @@ async function lookupDns(domain: string): Promise<RegistryRecord> {
  */
 type WhoDatResponse = {
   isRegistered?: boolean;
+  status?: string[] | null;
   registrar?: { name?: string | null };
   nameservers?: { name?: string | null }[];
   dates?: { created?: string | null; expires?: string | null };
@@ -296,7 +297,14 @@ async function lookupWhoisProxy(domain: string): Promise<RegistryRecord | null> 
   }
   if (payload.error || typeof payload.isRegistered !== "boolean") return null;
 
-  if (!payload.isRegistered) {
+  // who-dat reports every .lv name as registered: the registry answers
+  // "Status: free" for unregistered ones and the proxy doesn't read that.
+  // Trust an explicit free/available status over its isRegistered flag.
+  const saysFree = (payload.status ?? []).some((s) =>
+    typeof s === "string" && /^(free|available)$/i.test(s.trim()),
+  );
+
+  if (!payload.isRegistered || saysFree) {
     return { domain, registration: "available", source: "whois", confidence: "low" };
   }
 
