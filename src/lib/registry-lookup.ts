@@ -13,13 +13,13 @@ import { Resolver } from "node:dns/promises";
  *          absence is only evidence, not proof: a domain can be registered
  *          and never delegated, and it looks identical to a free one from the
  *          outside. Results from here are marked low confidence.
- *   WHOIS  a last resort, only reached when both of the above come back
- *          genuinely inconclusive (a DNS timeout or a resolver error, not a
- *          clean "no such name"). Goes through who-dat.as93.net, a free, open
- *          source, unauthenticated WHOIS/RDAP proxy — see lookupWhoisProxy()
- *          below. It is a third party we do not control, so it is only ever
- *          consulted for the minority of domains the first two sources
- *          couldn't settle, never as the primary path.
+ *   WHOIS  a last resort, only reached when neither of the above proves the
+ *          domain registered (no RDAP server, and DNS either failed or found
+ *          nothing — which an undelegated registration also looks like). Goes
+ *          through who-dat.as93.net, a free, open source, unauthenticated
+ *          WHOIS/RDAP proxy — see lookupWhoisProxy() below. It is a third
+ *          party we do not control, so it is never the primary path, and its
+ *          failure just leaves the DNS verdict standing.
  */
 
 /** What a lookup can establish about a name. */
@@ -259,6 +259,7 @@ async function lookupDns(domain: string): Promise<RegistryRecord> {
  */
 type WhoDatResponse = {
   isRegistered?: boolean;
+  status?: string[] | null;
   registrar?: { name?: string | null };
   nameservers?: { name?: string | null }[];
   dates?: { created?: string | null; expires?: string | null };
@@ -296,7 +297,14 @@ async function lookupWhoisProxy(domain: string): Promise<RegistryRecord | null> 
   }
   if (payload.error || typeof payload.isRegistered !== "boolean") return null;
 
-  if (!payload.isRegistered) {
+  // who-dat reports every .lv name as registered: the registry answers
+  // "Status: free" for unregistered ones and the proxy doesn't read that.
+  // Trust an explicit free/available status over its isRegistered flag.
+  const saysFree = (payload.status ?? []).some((s) =>
+    typeof s === "string" && /^(free|available)$/i.test(s.trim()),
+  );
+
+  if (!payload.isRegistered || saysFree) {
     return { domain, registration: "available", source: "whois", confidence: "low" };
   }
 
@@ -353,9 +361,11 @@ export async function lookupDomain(domain: string): Promise<RegistryRecord> {
   const promise = (async () => {
     const rdap = await lookupRdap(domain);
     let record = rdap ?? (await lookupDns(domain));
-    // DNS could not tell registered from free — try the WHOIS proxy before
-    // giving up. Its own failure just means the DNS verdict stands.
-    if (!rdap && record.registration === "unknown") {
+    // DNS can't prove a name is free: a registered-but-undelegated domain
+    // (yummy.lv) looks identical to an unregistered one. So anything short
+    // of a DNS "registered" gets checked against the WHOIS proxy. Its own
+    // failure just means the DNS verdict stands.
+    if (!rdap && record.registration !== "registered") {
       record = (await lookupWhoisProxy(domain)) ?? record;
     }
     writeCache(domain, record);
